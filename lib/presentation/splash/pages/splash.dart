@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tec_bloc/common/helper/navigator/app_navigator.dart';
+import 'package:tec_bloc/core/constants/app_colors.dart';
 import 'package:tec_bloc/core/constants/app_text.dart';
 import 'package:tec_bloc/presentation/auth/pages/login.dart';
 import 'package:tec_bloc/presentation/splash/bloc/splash_cubit.dart';
@@ -22,14 +23,24 @@ class Splash extends StatelessWidget {
        }
       },
       child: Scaffold(
-        body: Center(
-          child: Text(
-            AppText.title,
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 30,
-                fontWeight: FontWeight.bold),
-          ),
+        body: Stack(
+          children: [
+            Image.asset(
+              'assets/images/dage_img.png',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+            Center(
+              child: Text(
+                AppText.title,
+                style: TextStyle(
+                    color: AppColors.kBlackColor,
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ]
         ),
       ),
     );

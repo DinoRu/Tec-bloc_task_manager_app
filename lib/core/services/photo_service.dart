@@ -39,12 +39,12 @@ Future<void> takePicture({required bool isFirst}) async {
     bool hasGeo = await checkGeotags(image);
     log("Picture has Geo Tags: $hasGeo");
 
-    if (!hasGeo) {
-      Position position = await determinePosition();
-      await addGeotagFlutterExif(pickedFile, position);
-      await readMetadata(image);
-      log(position.toString());
-    }
+    // if (!hasGeo) {
+    //   Position position = await determinePosition();
+    //   await addGeotagFlutterExif(pickedFile, position);
+    //   await readMetadata(image);
+    //   log(position.toString());
+    // }
     await readMetadata(image);
     if (isFirst) {
       photo1 = pickedFile;

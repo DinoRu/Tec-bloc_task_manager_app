@@ -1,4 +1,4 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -6,10 +6,11 @@ import 'package:exif/exif.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_exif_plugin/flutter_exif_plugin.dart';
-import 'package:flutter_exif_plugin/tags.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:flutter_exif_plugin/flutter_exif_plugin.dart';
+// import 'package:flutter_exif_plugin/tags.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:native_exif/native_exif.dart';
 import 'package:tec_bloc/common/helper/navigator/app_navigator.dart';
 import 'package:tec_bloc/common/widgets/build_text.dart';
 import 'package:tec_bloc/common/widgets/show_snackbar.dart';
@@ -22,7 +23,7 @@ import 'package:tec_bloc/presentation/tasks/task_detail/bloc/update_cubit.dart';
 import 'package:tec_bloc/presentation/tasks/task_detail/widgets/comment_textfield.dart';
 
 import '../../../../core/permission_handler/gps_permission.dart';
-import '../../../../core/services/metadata_service.dart';
+// import '../../../../core/services/metadata_service.dart';
 
 class TaskDetailPage extends StatefulWidget {
   final TaskEntity task;
@@ -45,9 +46,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   late String photoUrl2;
   bool isUploading = false;
 
-  late FlutterExif exif;
+  // late FlutterExif exif;
   late Map<String, IfdTag>? metaData;
-
 
   Future<bool> checkGeotags(File imageFile) async {
     final bytes = await imageFile.readAsBytes();
@@ -57,6 +57,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           data.containsKey('GPS GPSLongitude');
     }
     return false;
+  }
+
+  Future<void> getNativeExif(XFile imageFile) async {
+    final exif = await Exif.fromPath(imageFile.path);
+    final latLong = await exif.getLatLong();
+    log("Coordonnées: $latLong");
   }
 
   Future<void> readMetadata(File imageFile) async {
@@ -86,27 +92,27 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     return [degrees, minutes, seconds];
   }
 
-  Future<void> addGeotagFlutterExif(XFile image, Position position) async {
-    List<int> latitude = convertToExifFormat(position.latitude);
-    List<int> longitude = convertToExifFormat(position.longitude);
-    try {
-      exif = FlutterExif.fromPath(image.path);
-      exif.setLatLong(position.latitude, position.longitude);
-      exif.setAttribute(
-          TAG_USER_COMMENT,
-          jsonEncode({
-            'GPS GPSLatitude': '${latitude[0]}, ${latitude[1]}, ${latitude[2]}',
-            'GPS GPSLongitude':
-                '${longitude[0]}, ${longitude[1]}, ${longitude[2]}',
-            'GPS GPSLatitudeRef': position.latitude >= 0 ? 'N' : 'S',
-            'GPS GPSLongitudeRef': position.longitude >= 0 ? 'E' : 'W',
-          }));
-      exif.saveAttributes();
-    } catch (e) {
-      log("Error writing EXIFS tags: ${e.toString()}");
-      log(e.toString());
-    }
-  }
+  // Future<void> addGeotagFlutterExif(XFile image, Position position) async {
+  //   List<int> latitude = convertToExifFormat(position.latitude);
+  //   List<int> longitude = convertToExifFormat(position.longitude);
+  //   try {
+  //     exif = FlutterExif.fromPath(image.path);
+  //     exif.setLatLong(position.latitude, position.longitude);
+  //     exif.setAttribute(
+  //         TAG_USER_COMMENT,
+  //         jsonEncode({
+  //           'GPS GPSLatitude': '${latitude[0]}, ${latitude[1]}, ${latitude[2]}',
+  //           'GPS GPSLongitude':
+  //               '${longitude[0]}, ${longitude[1]}, ${longitude[2]}',
+  //           'GPS GPSLatitudeRef': position.latitude >= 0 ? 'N' : 'S',
+  //           'GPS GPSLongitudeRef': position.longitude >= 0 ? 'E' : 'W',
+  //         }));
+  //     exif.saveAttributes();
+  //   } catch (e) {
+  //     log("Error writing EXIFS tags: ${e.toString()}");
+  //     log(e.toString());
+  //   }
+  // }
 
   Future<void> takePicture({required bool isFirst}) async {
     final pickedFile = await picker.pickImage(
@@ -116,15 +122,17 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     if (pickedFile != null) {
       File image = File(pickedFile.path);
       bool hasGeo = await checkGeotags(image);
+      await getNativeExif(pickedFile);
       log("Picture has Geo Tags: $hasGeo");
 
-      if (!hasGeo) {
-        Position position = await determinePosition();
-        await addGeotagFlutterExif(pickedFile, position);
-        await readMetadata(image);
-        log(position.toString());
-      }
-      await readMetadata(image);
+      // if (!hasGeo) {
+      //   Position position = await determinePosition();
+      //   await addGeotagFlutterExif(pickedFile, position);
+      //   await readMetadata(image);
+      //   log(position.toString());
+      // }
+      // await readMetadata(image);
+
       setState(() async {
         if (isFirst) {
           photo1 = pickedFile;

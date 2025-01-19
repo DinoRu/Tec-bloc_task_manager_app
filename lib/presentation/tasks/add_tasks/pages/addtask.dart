@@ -6,8 +6,8 @@ import 'package:exif/exif.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_exif_plugin/flutter_exif_plugin.dart';
-import 'package:flutter_exif_plugin/tags.dart';
+// import 'package:flutter_exif_plugin/flutter_exif_plugin.dart';
+// import 'package:flutter_exif_plugin/tags.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tec_bloc/common/widgets/build_text.dart';
@@ -56,7 +56,7 @@ class _AddTaskState extends State<AddTask> {
   XFile? photo1;
   XFile? photo2;
 
-  late FlutterExif exif;
+  // late FlutterExif exif;
   late Map<String, IfdTag>? metaData;
 
   Future<bool> checkGeotags(File imageFile) async {
@@ -102,27 +102,27 @@ class _AddTaskState extends State<AddTask> {
     return [degrees, minutes, seconds];
   }
 
-  Future<void> addGeotagFlutterExif(XFile image, Position position) async {
-    List<int> latitude = convertToExifFormat(position.latitude);
-    List<int> longitude = convertToExifFormat(position.longitude);
-    try {
-      exif = FlutterExif.fromPath(image.path);
-      exif.setLatLong(position.latitude, position.longitude);
-      exif.setAttribute(
-          TAG_USER_COMMENT,
-          jsonEncode({
-            'GPS GPSLatitude': '${latitude[0]}, ${latitude[1]}, ${latitude[2]}',
-            'GPS GPSLongitude':
-                '${longitude[0]}, ${longitude[1]}, ${longitude[2]}',
-            'GPS GPSLatitudeRef': position.latitude >= 0 ? 'N' : 'S',
-            'GPS GPSLongitudeRef': position.longitude >= 0 ? 'E' : 'W',
-          }));
-      exif.saveAttributes();
-    } catch (e) {
-      log("Error writing EXIFS tags: ${e.toString()}");
-      log(e.toString());
-    }
-  }
+  // Future<void> addGeotagFlutterExif(XFile image, Position position) async {
+  //   List<int> latitude = convertToExifFormat(position.latitude);
+  //   List<int> longitude = convertToExifFormat(position.longitude);
+  //   try {
+  //     exif = FlutterExif.fromPath(image.path);
+  //     exif.setLatLong(position.latitude, position.longitude);
+  //     exif.setAttribute(
+  //         TAG_USER_COMMENT,
+  //         jsonEncode({
+  //           'GPS GPSLatitude': '${latitude[0]}, ${latitude[1]}, ${latitude[2]}',
+  //           'GPS GPSLongitude':
+  //               '${longitude[0]}, ${longitude[1]}, ${longitude[2]}',
+  //           'GPS GPSLatitudeRef': position.latitude >= 0 ? 'N' : 'S',
+  //           'GPS GPSLongitudeRef': position.longitude >= 0 ? 'E' : 'W',
+  //         }));
+  //     exif.saveAttributes();
+  //   } catch (e) {
+  //     log("Error writing EXIFS tags: ${e.toString()}");
+  //     log(e.toString());
+  //   }
+  // }
 
   Future<void> takePicture({required bool isFirst}) async {
     final pickedFile = await picker.pickImage(
@@ -134,12 +134,12 @@ class _AddTaskState extends State<AddTask> {
       bool hasGeo = await checkGeotags(image);
       log("Picture has Geo Tags: $hasGeo");
 
-      if (!hasGeo) {
-        Position position = await determinePosition();
-        await addGeotagFlutterExif(pickedFile, position);
-        await readMetadata(image);
-        log(position.toString());
-      }
+      // if (!hasGeo) {
+      //   Position position = await determinePosition();
+      //   // await addGeotagFlutterExif(pickedFile, position);
+      //   await readMetadata(image);
+      //   log(position.toString());
+      // }
       await readMetadata(image);
       setState(() async {
         if (isFirst) {
