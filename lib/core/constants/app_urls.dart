@@ -3,11 +3,22 @@ class AppUrls {
   AppUrls._();
 
   static const baseUrl = "http://62.217.182.141:8000/";
-  static const login = "${baseUrl}users/login";
-  static const getTaskByUser = "${baseUrl}tasks/supervisor/tasks";
-  static const addNewTask = "${baseUrl}tasks/add_task";
-  static const getCompletedTaskByUser = "${baseUrl}tasks/completed/tasks";
-  static String getUserByUsername(String userId) => "${baseUrl}users/user/$userId";
-  static String getUserInfo = "${baseUrl}users/info";
-  static String update(String taskId) => "${baseUrl}tasks/task/$taskId";
+
+  // AUTH
+  static const login = "${baseUrl}auth/login";
+  static const createTask = "${baseUrl}task/";
+  static const allTask = "${baseUrl}task/";
+  static String me = "${baseUrl}auth/me";
+  
+  // TASKS
+  static const getOrCreateTask = "$baseUrl/task";
+  static String getTask(int taskID) => "$baseUrl/task/$taskID";
+  static String updateTask(int taskId) => "${baseUrl}task/$taskId";
+
+  // WorkType
+  static const getWorkType = "${baseUrl}workType/";
+
+  // Voltage
+  static const getVoltage = "${baseUrl}voltage/";
+
 }

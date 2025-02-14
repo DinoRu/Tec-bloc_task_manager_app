@@ -14,36 +14,35 @@ class Profil extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: BlocListener<LogoutCubit, LogoutState>(
-      listener: (context, state) {
-        if (state is LogoutSuccess) {
-          AppNavigator.pushAndRemove(context, const LoginPage());
+    return BlocListener<LogoutCubit, LogoutState>(
+          listener: (context, state) {
+    if (state is LogoutSuccess) {
+      AppNavigator.pushAndRemove(context, const LoginPage());
+    }
+          },
+          child: Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: buildText(
+            "Профиль",
+            AppColors.kPrimaryColor,
+            textXExtraLarge,
+            FontWeight.w800,
+            TextAlign.center,
+            TextOverflow.clip),
+      ),
+      body: BlocBuilder<UserCubit, UserState>(builder: (context, state) {
+        if (state is UserLoading) {
+          return const Center(
+            child:
+                CircularProgressIndicator(color: AppColors.kPrimaryColor),
+          );
+        } else if (state is UserLoaded) {
+          return UserInfo(user: state.user);
+        } else {
+          return const Center(child: Text("Error occur!"));
         }
-      },
-      child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: buildText(
-                "Профиль",
-                AppColors.kPrimaryColor,
-                textXExtraLarge,
-                FontWeight.w800,
-                TextAlign.center,
-                TextOverflow.clip),
-          ),
-          body: BlocBuilder<UserCubit, UserState>(builder: (context, state) {
-            if (state is UserLoading) {
-              return const Center(
-                child:
-                    CircularProgressIndicator(color: AppColors.kPrimaryColor),
-              );
-            } else if (state is UserLoaded) {
-              return UserInfo(user: state.user);
-            } else {
-              return const Center(child: Text("Error occur!"));
-            }
-          })),
-    ));
+      })),
+        );
   }
 }

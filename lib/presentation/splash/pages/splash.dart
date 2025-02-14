@@ -5,7 +5,7 @@ import 'package:tec_bloc/core/constants/app_colors.dart';
 import 'package:tec_bloc/core/constants/app_text.dart';
 import 'package:tec_bloc/presentation/auth/pages/login.dart';
 import 'package:tec_bloc/presentation/splash/bloc/splash_cubit.dart';
-import 'package:tec_bloc/presentation/tasks/main/MainPage.dart';
+import 'package:tec_bloc/presentation/tasks/home/pages/home.dart';
 
 
 class Splash extends StatelessWidget {
@@ -19,28 +19,18 @@ class Splash extends StatelessWidget {
         AppNavigator.pushReplacement(context, const LoginPage());
        }
        if (state is Authenticated) {
-        AppNavigator.pushReplacement(context, const Mainpage());
+        AppNavigator.pushReplacement(context, const Home());
        }
       },
       child: Scaffold(
-        body: Stack(
-          children: [
-            Image.asset(
-              'assets/images/dage_img.png',
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
-            ),
-            Center(
-              child: Text(
-                AppText.title,
-                style: TextStyle(
-                    color: AppColors.kBlackColor,
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ]
+        body: Center(
+          child: Text(
+            AppText.title,
+            style: TextStyle(
+                color: AppColors.kPrimaryColor,
+                fontSize: 35,
+                fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );

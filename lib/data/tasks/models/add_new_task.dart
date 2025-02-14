@@ -1,38 +1,41 @@
-class AddNewTaskParams {
-  final String taskId;
-  final String code;
-  final String dispatcher;
-  final String location;
-  final String plannedDate;
-  final double voltage;
+class CreateTaskParams {
   final String workType;
+  final String dispatcher;
+  final String address;
+  final double voltage;
+  final String job;
   final String photoUrl1;
   final String photoUrl2;
+  final String? photoUrl3;
+  final String? photoUrl4;
+  final String? photoUrl5;
   String? comment;
 
-  AddNewTaskParams({
-    required this.taskId,
-    required this.code,
-    required this.dispatcher,
-    required this.location,
-    required this.plannedDate,
-    required this.voltage,
+  CreateTaskParams({
     required this.workType,
+    required this.dispatcher,
+    required this.address,
+    required this.voltage,
+    required this.job,
     required this.photoUrl1,
     required this.photoUrl2,
+    this.photoUrl3,
+    this.photoUrl4,
+    this.photoUrl5,
     required this.comment
   });
 
   Map<String, dynamic> toJson() => {
-    "task_id": taskId,
-    "code": code,
-    "dispatcher_name": dispatcher,
-    "location": location,
-    "planner_date": plannedDate,
     "work_type": workType,
-    "voltage_class": voltage,
+    "dispatcher_name": dispatcher,
+    "address": address,
+    "job": job,
+    "voltage": voltage,
     "photo_url_1": photoUrl1,
     "photo_url_2": photoUrl2,
+    "photo_url_3": photoUrl3 ?? "",
+    "photo_url_4": photoUrl4 ?? "",
+    "photo_url_5": photoUrl5 ?? "",
     "comments": comment ?? ""
   };
 }

@@ -6,5 +6,5 @@ abstract class AuthRepository {
   Future<Either> login(UserLoginReq user);
   Future<void> logout();
   Future<bool> isLoggedIn();
-  Future<Either> getUser();
+  Future<Either> authUser();
 }

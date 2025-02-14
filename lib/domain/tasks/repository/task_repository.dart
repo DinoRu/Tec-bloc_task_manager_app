@@ -6,7 +6,6 @@ import '../../../data/tasks/models/update_task_params.dart';
 abstract class TaskRepository {
 
   Future<Either> getTasks();
-  Future<Either> getCompletedTasks();
-  Future<Either> addNewTask(AddNewTaskParams params);
-  Future<Either> updateTask(UpdateTaskParams params, String taskId);
+  Future<Either> createTask(CreateTaskParams params);
+  Future<Either> updateTask(UpdateTaskParams params, int taskId);
 }

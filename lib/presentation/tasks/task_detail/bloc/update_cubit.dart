@@ -11,7 +11,7 @@ class UpdateCubit extends Cubit<UpdateState> {
   final UpdateTaskUsecase updateTaskUsecase;
   UpdateCubit(this.updateTaskUsecase) : super(UpdateInitial());
 
-  Future<void> updateTask(String taskId, UpdateTaskParams params) async {
+  Future<void> updateTask(int taskId, UpdateTaskParams params) async {
     emit(UpdateTaskLoading());
     final result = await updateTaskUsecase.call(params: params, taskId: taskId);
     result.fold(

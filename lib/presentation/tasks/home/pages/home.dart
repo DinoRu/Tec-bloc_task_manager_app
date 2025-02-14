@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tec_bloc/common/helper/navigator/app_navigator.dart';
+import 'package:tec_bloc/common/widgets/show_snackbar.dart';
 import 'package:tec_bloc/core/constants/app_colors.dart';
-import 'package:tec_bloc/core/constants/app_text.dart';
-import 'package:tec_bloc/domain/tasks/entity/task_entity.dart';
-import 'package:tec_bloc/domain/tasks/usecases/get_completed_tasks_usecase.dart';
-import 'package:tec_bloc/domain/tasks/usecases/get_tasks_usecase.dart';
+import 'package:tec_bloc/presentation/profil/pages/profil.dart';
+import 'package:tec_bloc/presentation/tasks/crreate_tasks/pages/create_task.dart';
 import 'package:tec_bloc/presentation/tasks/home/bloc/task_cubit.dart';
-import 'package:tec_bloc/presentation/tasks/home/pages/completed_task_page.dart';
-import 'package:tec_bloc/presentation/tasks/home/pages/task_page.dart';
-
-import '../../../../service_locator.dart';
+import 'package:tec_bloc/presentation/tasks/home/cubit/sync_cubit.dart';
+import 'package:tec_bloc/presentation/tasks/home/widgets/button.dart';
+import 'package:tec_bloc/presentation/tasks/home/widgets/task_tile.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -19,112 +18,122 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
-  final _searchController = TextEditingController();
-  String searchQuery = "";
-  late TabController _tabController;
-  List<TaskEntity> filterTasks = [];
-  
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
   }
 
-  void _searchTasks(String query, BuildContext context) {
-    final taskCubit = context.read<TaskCubit>();
-    if (query.isEmpty) {
-      filterTasks = taskCubit.allTasks; // Réinitialiser les tâches
-    } else {
-      filterTasks = taskCubit.allTasks.where((task) {
-        return task.code!.toLowerCase().contains(query.toLowerCase()) ||
-            task.dispatcher!.toLowerCase().contains(query.toLowerCase()) ||
-            task.workType!.toLowerCase().contains(query.toLowerCase());
-      }).toList();
-    }
-    setState(() {}); // Met à jour l'affichage
+  Future<void> _refresh(BuildContext context) async {
+    context.read<TaskCubit>().displayTask();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GestureDetector(
+    return GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
         },
         child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(150),
-            child: AppBar(
+            appBar: AppBar(
               elevation: 0,
-              flexibleSpace: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    const Text(
-                      AppText.title,
-                      style: TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      enabled: true,
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(
-                                  color:
-                                      Theme.of(context).colorScheme.primary)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(
-                                color:
-                                    Theme.of(context).colorScheme.primary)
-                          ),
-                          hintText: "ТО, Диспечерская..., тип работа",
-                          hintStyle: TextStyle(color: Colors.grey.shade400),
-                          suffixIcon: const Icon(Icons.tune),
-                      ),
-                      onChanged: (value) {
-                        debugPrint("Search items: $value");
-                      },
-                    ),
-                    const SizedBox(height: 10)
-                  ],
+              leading: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+                  onPressed: () => AppNavigator.push(context, Profil()), 
+                  icon: Icon(Icons.person, size: 40,)
+                )
+              ),
+              actions: [
+                MyButton(
+                    label: "+ Добавить",
+                    onTap: () => AppNavigator.push(context, CreateTask())),
+                const SizedBox(width: 5)
+              ],
+            ),
+            body: RefreshIndicator(
+              onRefresh: () => _refresh(context),
+              child: Stack(children: [
+                SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: BlocBuilder<TaskCubit, TaskState>(
+                      builder: (context, state) {
+                    if (state is TaskLoading) {
+                      return const Center(
+                          child: CircularProgressIndicator(
+                              color: AppColors.kPrimaryColor));
+                    } else if (state is TaskLoaded) {
+                      if (state.tasks.isEmpty) {
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          child: Center(child: Text("Задачи отсутсвуют..."))
+                        );
+                      }
+                      return Column(
+                        children: [
+                          ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: state.tasks.length,
+                              itemBuilder: (context, index) {
+                                final task = state.tasks[index];
+                                return TaskTile(task: task);
+                              }),
+                          const SizedBox(height: 100),
+                        ],
+                      );
+                    } else {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: const Center(child: Text("Ощибка...!")));
+                    }
+                  }),
                 ),
-              ),
-              bottom: TabBar(
-                controller: _tabController,
-                tabs: const [
-                  Tab(text: "Выполняется"),
-                  Tab(text: "Выполнено")
-                ],
-                labelColor: AppColors.primary,
-                dividerColor: Colors.grey.shade100,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicatorColor: AppColors.primary,
-              ),
-            ),
-          ),
-          body: TabBarView(
-            controller: _tabController,
-            children: [
-            BlocProvider(
-              create: (context) =>
-                  TaskCubit(useCase: sl<GetTasksUsecase>())..displayTask(),
-              child: const TaskPage(),
-            ),
-            BlocProvider(
-              create: (context) => TaskCubit(useCase: sl<GetCompletedTasksUsecase>())..displayTask(),
-              child: const CompletedTaskPage(),
-            )
-          ]
-        ),
-            ),
-      ),
-          );
+                BlocListener<SyncCubit, SyncState>(
+                  listener: (context, state) {
+                    if (state is AllTaskSyncSuccess) {
+                      context.read<TaskCubit>().displayTask();
+                    } else if (state is TaskSyncFailure) {
+                      showSnackBar(context, state.message);
+                    }
+                  },
+                  child: BlocBuilder<SyncCubit, SyncState>(
+                    builder: (context, syncState) {
+                      return BlocBuilder<TaskCubit, TaskState>(
+                          builder: (context, state) {
+                        if (state is TaskLoaded && state.tasks.isNotEmpty) {
+                          if (syncState is SyncLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator(color: Colors.red),
+                            );
+                          }
+                          return Positioned(
+                            bottom: 20,
+                            left: 20,
+                            right: 20,
+                            child: ElevatedButton(
+                                onPressed: () => context.read<SyncCubit>().onSyncLocalTasks(),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 15)),
+                                child: Center(
+                                  child: Text(
+                                    'Отправить',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                )),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      });
+                    },
+                  ),
+                )
+              ]),
+            )));
   }
 }

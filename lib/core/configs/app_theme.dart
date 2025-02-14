@@ -24,7 +24,7 @@ class AppTheme {
       const InputDecorationTheme(border: InputBorder.none),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.kPrimaryColor,
         elevation: 0,
         textStyle: const TextStyle(fontSize: 16,fontWeight: FontWeight.w400),
         shape: RoundedRectangleBorder(

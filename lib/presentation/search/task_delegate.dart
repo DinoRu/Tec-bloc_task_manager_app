@@ -32,7 +32,7 @@ class TaskSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     final filteredTasks = allTasks.where((task) {
-      return task.code!.toLowerCase().contains(query.toLowerCase()) ||
+      return task.workType!.toLowerCase().contains(query.toLowerCase()) ||
           task.workType!.toLowerCase().contains(query.toLowerCase());
     }).toList();
 
@@ -47,7 +47,7 @@ class TaskSearchDelegate extends SearchDelegate {
       itemBuilder: (context, index) {
         final task = filteredTasks[index];
         return ListTile(
-          title: Text(task.code!),
+          title: Text(task.workType!),
           subtitle: Text(task.workType!),
           onTap: () {
             // Action lors de la sélection d'une tâche

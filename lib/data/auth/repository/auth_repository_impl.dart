@@ -15,12 +15,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either> login(UserLoginReq user) async{
-    return await sl<AuthRemoteService>().signin(user);
+    return await sl<AuthRemoteService>().login(user);
   }
   
   @override
-  Future<Either> getUser() {
-    return sl<AuthRemoteService>().getUser();
+  Future<Either> authUser() {
+    return sl<AuthRemoteService>().authUser();
   }
 
   @override

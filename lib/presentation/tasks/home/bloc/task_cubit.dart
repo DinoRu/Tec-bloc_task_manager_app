@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,9 @@ class TaskCubit extends Cubit<TaskState> {
     final result = await useCase.call(params: params);
     result.fold(
       (error) {
+        log("$error");
         emit(LoadTasksFailure());
+        throw(error);
       },
       (tasks) {
         allTasks = tasks;
@@ -30,19 +34,5 @@ class TaskCubit extends Cubit<TaskState> {
     emit(
       TaskInitialState()
     );
-  }
-
-  void searchTasks(String query) {
-    if (query.isEmpty) {
-      emit(TaskLoaded(tasks: allTasks));
-    } else {
-      final filteredTasks = allTasks.where((task) =>
-        task.code!.toLowerCase().contains(query.toLowerCase()) || 
-        task.dispatcher!.toLowerCase().contains(query.toLowerCase()) ||
-        task.workType!.toLowerCase().contains(query.toLowerCase())
-      ).toList();
-      debugPrint("Filtered tasks: $filteredTasks");
-      emit(TaskLoaded(tasks: filteredTasks));
-    }
   }
 }

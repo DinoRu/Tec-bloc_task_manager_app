@@ -5,9 +5,9 @@ import 'package:tec_bloc/core/constants/app_colors.dart';
 import 'package:tec_bloc/core/constants/app_text.dart';
 import 'package:tec_bloc/data/auth/models/user_login_req.dart';
 import 'package:tec_bloc/domain/auth/usecases/login.dart';
-import 'package:tec_bloc/presentation/tasks/main/MainPage.dart';
 import 'package:tec_bloc/service_locator.dart';
 
+import '../../tasks/home/pages/home.dart';
 import '../widgets/my_textformfield.dart';
 
 
@@ -38,26 +38,26 @@ class _LoginPageState extends State<LoginPage> {
         _errorMsg = null;
       });
       final loginUseCase = sl<LoginUseCase>();
-        final result = await loginUseCase(
-          params: UserLoginReq(
-            username: usernameController.text, 
-            password: passwordController.text
-          )
-        );
-        result.fold(
-          (failure) {
-            debugPrint(failure.toString());
-            setState(() {
-              isLoading = false;
-              _errorMsg = failure.toString();
-            });
-          }, 
-          (token) {
-            setState(() {
-              isLoading = false;
-              AppNavigator.pushReplacement(context, const Mainpage());
-            });
+      final result = await loginUseCase(
+        params: UserLoginReq(
+          username: usernameController.text, 
+          password: passwordController.text
+        )
+      );
+      result.fold(
+        (failure) {
+          debugPrint(failure.toString());
+          setState(() {
+            isLoading = false;
+            _errorMsg = failure.toString();
           });
+        }, 
+        (token) {
+          setState(() {
+            isLoading = false;
+            AppNavigator.pushReplacement(context, const Home());
+          });
+        });
     }
   }
 
@@ -112,10 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                     validator: (val) {
                       if (val!.isEmpty) {
                         return 'Пожалуйста, заполните это поле';
-                      } else if (!RegExp(
-                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~`)\%\-(_+=;:,.<>/?"[{\]}\|^]).{8,}$')
-                          .hasMatch(val)) {
-                        return 'Пожалуйста, введите действительный пароль';
                       }
                       return null;
                     },

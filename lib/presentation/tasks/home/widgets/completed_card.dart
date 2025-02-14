@@ -34,7 +34,7 @@ class TaskCompletedCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildText(
-                    taskEntity.location ?? "N/A", 
+                    taskEntity.address ?? "N/A", 
                     AppColors.kBlackColor, 
                     textSmall, 
                     FontWeight.w400, 
@@ -72,7 +72,7 @@ class TaskCompletedCard extends StatelessWidget {
                          const SizedBox(width: 10),
                          Expanded(
                           child: buildText(
-                              taskEntity.completedDate ?? "N/A", 
+                              taskEntity.completionDate ?? "N/A", 
                               AppColors.kBlackColor, 
                               textTiny, 
                               FontWeight.w400, 

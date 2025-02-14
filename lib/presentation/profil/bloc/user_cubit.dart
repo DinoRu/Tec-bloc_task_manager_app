@@ -17,7 +17,6 @@ class UserCubit extends Cubit<UserState> {
     emit(UserLoading());
     try {
       final result = await sl<GetUserUseCase>().call();
-      log("$result");
       result.fold(
         (error) => emit(UserFailure()),
         (user) => emit(UserLoaded(user: user))

@@ -40,7 +40,7 @@ class TaskCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildText(
-                    taskEntity.location ?? "N/A",
+                    taskEntity.address ?? "N/A",
                     AppColors.kBlackColor,
                     textSmall,
                     FontWeight.w400,
@@ -75,7 +75,7 @@ class TaskCard extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                           child: buildText(
-                              taskEntity.plannedDate ?? "N/A",
+                              taskEntity.plannerDate ?? "N/A",
                               AppColors.kBlackColor,
                               textTiny,
                               FontWeight.w400,

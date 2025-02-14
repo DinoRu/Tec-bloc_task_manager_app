@@ -3,24 +3,21 @@ import 'package:tec_bloc/domain/auth/entity/user.dart';
 class UserModel {
   final String userId;
   final String username;
-  final String? location;
+  final String role;
   final String fullName;
-  final String password;
 
   UserModel({
     required this.userId,
     required this.fullName,
-    required this.location,
+    required this.role,
     required this.username,
-    required this.password
   });
 
   factory UserModel.fromjson(Map<String, dynamic> json) {
     return UserModel(
-      userId: json["user_id"],
+      userId: json["uid"],
       fullName: json["full_name"], 
-      location: json["location"] ?? "", 
-      password: json["password"], 
+      role: json["role"],
       username: json["username"]
     );
   }
@@ -31,10 +28,9 @@ extension UserXModel on UserModel {
     UserEntity toEntity() {
       return UserEntity(
         userId: userId,
-        location: location ?? "", 
+        role: role, 
         fullName: fullName,
         username: username,
-        password: password
     );
   }
 }

@@ -54,7 +54,7 @@ class TaskCompletedDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   buildText(
-                    task.code ?? "N/A", 
+                    task.job ?? "N/A", 
                     AppColors.kBlackColor, 
                     textMedium, 
                     FontWeight.normal, 
@@ -90,7 +90,7 @@ class TaskCompletedDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                    buildText(
-                    task.location ?? "N/A", 
+                    task.address ?? "N/A", 
                     AppColors.kBlackColor, 
                     textSmall, 
                     FontWeight.normal, 
@@ -108,7 +108,7 @@ class TaskCompletedDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                    buildText(
-                    task.plannedDate ?? "N/A", 
+                    task.plannerDate ?? "N/A", 
                     AppColors.kBlackColor, 
                     textSmall, 
                     FontWeight.normal, 
@@ -126,7 +126,7 @@ class TaskCompletedDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                    buildText(
-                    task.completedDate ?? "N/A", 
+                    task.completionDate ?? "N/A", 
                     AppColors.kBlackColor, 
                     textSmall, 
                     FontWeight.normal, 
@@ -184,17 +184,15 @@ class TaskCompletedDetailPage extends StatelessWidget {
                     children: [
                       Expanded(
                         child: SizedBox(
-                          // width: MediaQuery.of(context).size.width * 0.5,
                           height: 200,
-                          child: task.photoUrl1 != null ? Image.network(task.photoUrl1!, fit: BoxFit.cover) : const Placeholder()
+                          child: task.photos[0] != null ? Image.network(task.photos[0], fit: BoxFit.cover) : const Placeholder()
                         ),
                       ),
                       const SizedBox(width: 5),
                       Expanded(
                         child: SizedBox(
-                          // width: MediaQuery.of(context).size.width * 0.5,
                           height: 200,
-                          child: Image.network(task.photoUrl2!, fit: BoxFit.cover,)
+                          child: Image.network(task.photos[1], fit: BoxFit.cover,)
                         ),
                       ),
                     ],

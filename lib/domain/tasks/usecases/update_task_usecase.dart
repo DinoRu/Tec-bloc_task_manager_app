@@ -6,7 +6,7 @@ import 'package:tec_bloc/service_locator.dart';
 
 class UpdateTaskUsecase implements UseCase<Either, UpdateTaskParams> {
   @override
-  Future<Either> call({UpdateTaskParams? params, String? taskId}) async {
+  Future<Either> call({UpdateTaskParams? params, int? taskId}) async {
     return await sl<TaskRepository>().updateTask(params!, taskId!);
   }
 }

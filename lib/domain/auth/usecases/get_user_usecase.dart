@@ -6,7 +6,7 @@ import '../../../service_locator.dart';
 class GetUserUseCase implements UseCase {
   @override
   Future call({params}) async {
-    return await sl<AuthRepository>().getUser();
+    return await sl<AuthRepository>().authUser();
   }
   
 }
