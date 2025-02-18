@@ -14,8 +14,9 @@ import 'package:tec_bloc/locals/db/db_helper.dart';
 
 abstract class TaskRemoteService {
   Future<Either<Failure, List<TaskEntity>>> getTasks();
+  Future<Either<Failure, List<TaskEntity>>> getCompletedTasks();
   Future<Either<Failure, bool>> createTask(CreateTaskParams params);
-  Future<Either<Failure, bool>> updateTask(UpdateTaskParams params, int taskId);
+  Future<Either<Failure, bool>> updateTask(UpdateTaskData params, int taskId);
 }
 
 class TaskRemoteServiceImpl extends TaskRemoteService {
@@ -35,7 +36,7 @@ class TaskRemoteServiceImpl extends TaskRemoteService {
       return Left(Failure("User not authenticated."));
     }
     try {
-      final localTasks = await dbHelper.getTasks();
+      final localTasks = await dbHelper.getFileTasks();
       if (localTasks.isNotEmpty) {
         log('CACHE :  HIT');
         return right(localTasks);
@@ -55,7 +56,7 @@ class TaskRemoteServiceImpl extends TaskRemoteService {
         final tasks = taskModels.map((task) => task.toEntity()).toList();
         // 📥 Sauvegarde dans SQLite
         for (TaskEntity task in tasks) {
-          await dbHelper.insertTask(task);
+          await dbHelper.insertFileTask(task);
         }
         log("API: HIT");
         return Right(tasks);
@@ -74,7 +75,7 @@ class TaskRemoteServiceImpl extends TaskRemoteService {
   }
 
   @override
-  Future<Either<Failure, bool>> updateTask(UpdateTaskParams params, int taskId) async {
+  Future<Either<Failure, bool>> updateTask(UpdateTaskData params, int taskId) async {
     final token = await secureStorage.read(key: tokenKey);
     if (token == null) {
       return Left(Failure("User not authenticated or token is expired."));
@@ -126,6 +127,35 @@ class TaskRemoteServiceImpl extends TaskRemoteService {
       return Left(Failure("Error updating task: $e"));
     }
   }
+  
+  @override
+  Future<Either<Failure, List<TaskEntity>>> getCompletedTasks() async{
+    try {
+      final response = await client.get(
+        Uri.parse(AppUrls.completedTasks),
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        }
+      );
+      if (response.statusCode == 200) {
+        Utf8Decoder decoder = Utf8Decoder();
+        String decodeBody = decoder.convert(response.bodyBytes);
+        final List<dynamic> result = jsonDecode(decodeBody);
+        final taskModels = result.map((json) => TaskModel.fromJson(json)).toList();
+        final tasks = taskModels.map((task) => task.toEntity()).toList();
 
+        return Right(tasks); 
+      } else if (response.statusCode == 404) {
+
+        return Left(
+          Failure("Task not found.")
+        );
+      } else {
+        return Left(Failure("Server error: ${response.statusCode}"));
+      }
+    } catch (e) {
+      return Left(Failure("Error to fetch data: $e"));
+    }
+  }
 }
 

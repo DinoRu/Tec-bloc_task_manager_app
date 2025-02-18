@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tec_bloc/common/helper/navigator/app_navigator.dart';
 import 'package:tec_bloc/core/constants/app_colors.dart';
 import 'package:tec_bloc/domain/tasks/entity/task_entity.dart';
-import 'package:tec_bloc/presentation/tasks/crreate_tasks/pages/create_task.dart';
 import 'package:tec_bloc/presentation/tasks/crreate_tasks/widgets/input_field.dart';
+import 'package:tec_bloc/presentation/tasks/home/pages/task_create_detail.dart';
 
 class TaskTile extends StatelessWidget {
   final TaskEntity task;
@@ -14,7 +14,7 @@ class TaskTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        AppNavigator.push(context, CreateTask(task: task));
+        AppNavigator.push(context, TaskCreateDetail(task: task));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),

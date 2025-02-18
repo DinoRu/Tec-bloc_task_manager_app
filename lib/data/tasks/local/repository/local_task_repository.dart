@@ -10,14 +10,11 @@ abstract class LocalTaskRepository {
   Future<Either> getLocalTasks();
   // Future<Either> createLocalTask(TaskEntity task);
   Future<Either> updateLocalTask(TaskEntity task);
+  Future<Either> getPendingTasks();
 }
 
 
 class LocalTaskRepositoryImpl extends LocalTaskRepository {
-  // @override
-  // Future<Either> createLocalTask(TaskEntity task) {
-  //   throw UnimplementedError();
-  // }
 
   @override
   Future<Either> getLocalTasks() async {
@@ -27,6 +24,11 @@ class LocalTaskRepositoryImpl extends LocalTaskRepository {
   @override
   Future<Either> updateLocalTask(TaskEntity task) {
     return sl<TaskLocalService>().updateTask(task);
+  }
+  
+  @override
+  Future<Either> getPendingTasks() async {
+    return await sl<TaskLocalService>().getPendingTasks();
   }
   
 }

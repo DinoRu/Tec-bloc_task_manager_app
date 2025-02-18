@@ -8,6 +8,7 @@ class DbHelper {
   static Database? _database;
   static const int _version = 1;
   static const String _tableName = 'task';
+  static const String _fileTaskTableName = 'file_tasks';
   static const String _dbName = "todo.db";
   static const String _vTable = 'voltage';
   static const String _wtTable = 'work_type';
@@ -48,6 +49,24 @@ class DbHelper {
     ''');
 
     await db.execute(''' 
+        CREATE TABLE $_fileTaskTableName (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          taskId INTEGER,
+          workType TEXT,
+          dispatcher TEXT,
+          address TEXT,
+          plannerDate TEXT,
+          voltage REAL,
+          job TEXT,
+          completionDate TEXT,
+          photos TEXT,
+          comment TEXT,
+          isCompleted INTEGER,
+          isSynced INTEGER DEFAULT 0
+        );
+    ''');
+
+    await db.execute(''' 
         CREATE TABLE $_vTable (
           ID INTEGER PRIMARY KEY AUTOINCREMENT,
           uid TEXT,
@@ -70,8 +89,23 @@ class DbHelper {
     final List<Map<String, dynamic>> result = await db.query(_tableName, where: 'isSynced = ?', whereArgs: [0]);
     return result.map((json) => TaskEntity.fromJson(json)).toList();
   }
+
+  Future<List<TaskEntity>> getFileTasks() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> result = await db.query(_fileTaskTableName, where: 'isSynced  = ?', whereArgs: [0]);
+
+    return result.map((json) => TaskEntity.fromJson(json)).toList();
+  }
+
+  Future<List<TaskEntity>> getPendingTasks() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> result = await db.query(_fileTaskTableName, where: 'isSynced = ?', whereArgs: [1]);
+
+    return result.map((json) => TaskEntity.fromJson(json)).toList();
+  }
   
-   /// ✅ Insertion d'une tâche avec photos
   Future<int> insertTask(TaskEntity task) async {
     final db = await database;
     return await db.insert(
@@ -81,15 +115,30 @@ class DbHelper {
     );
   }
 
-  Future<int> updateTasks(UpdateTaskParams params, int id) async {
+   /// ✅ Insertion d'une tâche avec photos
+  Future<int> insertFileTask(TaskEntity task) async {
+    final db = await database;
+    return await db.insert(
+      _fileTaskTableName,
+      task.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<int> updateFileTasks(int taskId, UpdateTaskParams data) async {
     final db = await database;
     try {
-      return await db.update(
-        _tableName,
-        params.toJson(),
+      final updateData = {
+        ...data.toJson(),
+        'isSynced': 1,
+      };
+      final result = await db.update(
+        _fileTaskTableName,
+        updateData,
         where: "taskId = ?",
-        whereArgs: [id]
+        whereArgs: [taskId]
       );
+      return result;
     } catch (e) {
       log("Error to update task: $e");
       return 0;
@@ -112,6 +161,15 @@ class DbHelper {
     final db = await database;
     return await db.delete(
       _tableName,
+      where: "taskId = ?",
+      whereArgs: [taskId],
+    );
+  }
+
+   Future<int> deleteTaskFromFile(int taskId) async {
+    final db = await database;
+    return await db.delete(
+      _fileTaskTableName,
       where: "taskId = ?",
       whereArgs: [taskId],
     );

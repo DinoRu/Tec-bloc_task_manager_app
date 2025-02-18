@@ -11,9 +11,9 @@ import 'package:tec_bloc/presentation/tasks/task_detail/pages/task_detail_page.d
 import 'package:tec_bloc/service_locator.dart';
 
 class TaskCard extends StatelessWidget {
-  final TaskEntity taskEntity;
+  final TaskEntity task;
 
-  const TaskCard({super.key, required this.taskEntity});
+  const TaskCard({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -23,71 +23,75 @@ class TaskCard extends StatelessWidget {
             context,
             BlocProvider(
               create: (context) => UpdateCubit(sl<UpdateTaskUsecase>()),
-              child: TaskDetailPage(task: taskEntity),
+              child: TaskDetailPage(task: task),
             ));
       },
-      child: Container(
-        width: double.maxFinite,
-        margin: const EdgeInsets.only(bottom: 10, top: 20),
-        padding: const EdgeInsets.all(0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Checkbox(value: false, onChanged: (value) {}),
-            Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildText(
-                    taskEntity.address ?? "N/A",
-                    AppColors.kBlackColor,
-                    textSmall,
-                    FontWeight.w400,
-                    TextAlign.start,
-                    TextOverflow.clip),
-                const SizedBox(height: 10),
-                buildText(
-                    taskEntity.dispatcher ?? "N/A",
-                    AppColors.kPrimaryColor,
-                    textMedium,
-                    FontWeight.w500,
-                    TextAlign.start,
-                    TextOverflow.clip),
-                const SizedBox(height: 5),
-                buildText(
-                    taskEntity.workType ?? "N/A",
-                    AppColors.kBlackColor,
-                    textSmall,
-                    FontWeight.normal,
-                    TextAlign.start,
-                    TextOverflow.clip),
-                const SizedBox(height: 10),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  decoration: BoxDecoration(
-                      color: AppColors.kPrimaryColor.withOpacity(.1),
-                      borderRadius: const BorderRadius.all(Radius.circular(5))),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.calendar_month, size: 20),
-                      const SizedBox(width: 10),
-                      Expanded(
-                          child: buildText(
-                              taskEntity.plannerDate ?? "N/A",
-                              AppColors.kBlackColor,
-                              textTiny,
-                              FontWeight.w400,
-                              TextAlign.start,
-                              TextOverflow.clip))
-                    ],
-                  ),
-                )
-              ],
-            )),
-            const SizedBox(height: 10),
-          ],
+      child: Card(
+        elevation: 0,
+        child: Container(
+          width: double.maxFinite,
+          margin: const EdgeInsets.only(bottom: 10, top: 20),
+          padding: const EdgeInsets.all(0),
+         
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Checkbox(value: false, onChanged: (value) {}),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildText(
+                      task.address ?? "N/A",
+                      AppColors.kBlackColor,
+                      textSmall,
+                      FontWeight.w400,
+                      TextAlign.start,
+                      TextOverflow.clip),
+                  const SizedBox(height: 10),
+                  buildText(
+                      task.dispatcher ?? "N/A",
+                      AppColors.kPrimaryColor,
+                      textMedium,
+                      FontWeight.w500,
+                      TextAlign.start,
+                      TextOverflow.clip),
+                  const SizedBox(height: 5),
+                  buildText(
+                      task.workType ?? "N/A",
+                      AppColors.kBlackColor,
+                      textSmall,
+                      FontWeight.normal,
+                      TextAlign.start,
+                      TextOverflow.clip),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    decoration: BoxDecoration(
+                        color: AppColors.kPrimaryColor.withOpacity(.1),
+                        borderRadius: const BorderRadius.all(Radius.circular(5))),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.calendar_month, size: 20),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            child: buildText(
+                                task.plannerDate ?? "N/A",
+                                AppColors.kBlackColor,
+                                textSmall,
+                                FontWeight.w600,
+                                TextAlign.start,
+                                TextOverflow.clip))
+                      ],
+                    ),
+                  )
+                ],
+              )),
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );

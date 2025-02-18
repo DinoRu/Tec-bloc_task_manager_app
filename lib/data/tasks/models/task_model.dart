@@ -82,7 +82,7 @@ class TaskModel {
       "planner_date": plannerDate,
       "voltage": voltage,
       "completion_date": completionDate,
-       "photos": jsonEncode(photos),
+      "photos": jsonEncode(photos),
       "comments": comment,
       "is_completed": isCompleted ? 1 : 0,
     };

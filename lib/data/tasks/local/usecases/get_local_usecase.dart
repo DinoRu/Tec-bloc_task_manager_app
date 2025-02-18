@@ -8,6 +8,6 @@ import '../../../../service_locator.dart';
 class GetLocalTaskUsecase implements UseCase<Either, dynamic>{
   @override
   Future<Either> call({params}) async {
-    return sl<LocalTaskRepository>().getLocalTasks();
+    return await sl<LocalTaskRepository>().getLocalTasks();
   }
 }

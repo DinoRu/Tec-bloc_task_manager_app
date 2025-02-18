@@ -76,5 +76,3 @@ icons_launcher:
   platforms:
     android:
       enable: true
-    # ios:
-    #   enable: true

@@ -22,14 +22,13 @@ class Profil extends StatelessWidget {
           },
           child: Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: buildText(
-            "Профиль",
-            AppColors.kPrimaryColor,
-            textXExtraLarge,
-            FontWeight.w800,
-            TextAlign.center,
-            TextOverflow.clip),
+        backgroundColor: AppColors.kPrimaryColor,
+        flexibleSpace: Container(),
+        foregroundColor: Colors.white,
+        title: Text('Профыль'),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.output, size: 35))
+        ],
       ),
       body: BlocBuilder<UserCubit, UserState>(builder: (context, state) {
         if (state is UserLoading) {

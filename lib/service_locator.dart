@@ -6,6 +6,7 @@ import 'package:tec_bloc/data/auth/source/auth_remote_service_impl.dart';
 import 'package:tec_bloc/data/tasks/local/datasources/task_local_source.dart';
 import 'package:tec_bloc/data/tasks/local/repository/local_task_repository.dart';
 import 'package:tec_bloc/data/tasks/local/usecases/get_local_usecase.dart';
+import 'package:tec_bloc/data/tasks/local/usecases/get_pending_tasks.dart';
 import 'package:tec_bloc/data/tasks/local/usecases/update_local_task.dart';
 import 'package:tec_bloc/data/tasks/repository/task_repositoryImpl.dart';
 import 'package:tec_bloc/data/tasks/source/task_remote_service.dart';
@@ -16,6 +17,7 @@ import 'package:tec_bloc/domain/auth/usecases/login.dart';
 import 'package:tec_bloc/domain/auth/usecases/logout_usecase.dart';
 import 'package:tec_bloc/domain/tasks/repository/task_repository.dart';
 import 'package:tec_bloc/domain/tasks/usecases/create_task_usecase.dart';
+import 'package:tec_bloc/domain/tasks/usecases/get_completed_tasks_usecase.dart';
 import 'package:tec_bloc/domain/tasks/usecases/get_tasks_usecase.dart';
 import 'package:tec_bloc/domain/tasks/usecases/update_task_usecase.dart';
 
@@ -66,6 +68,10 @@ Future<void> initializeDependencies() async {
     GetTasksUsecase()
   );
 
+  sl.registerSingleton<GetCompletedTasksUsecase>(
+    GetCompletedTasksUsecase()
+  );
+  
   sl.registerSingleton<UpdateTaskUsecase>(
     UpdateTaskUsecase()
   );
@@ -84,5 +90,9 @@ Future<void> initializeDependencies() async {
 
   sl.registerSingleton<UpdateLocalTaskUsecase>(
     UpdateLocalTaskUsecase()
+  );
+
+  sl.registerSingleton<GetPendingTasksUsecase>(
+    GetPendingTasksUsecase()
   );
 }

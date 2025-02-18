@@ -5,7 +5,7 @@ import 'package:tec_bloc/core/constants/app_colors.dart';
 import 'package:tec_bloc/core/constants/app_text.dart';
 import 'package:tec_bloc/presentation/auth/pages/login.dart';
 import 'package:tec_bloc/presentation/splash/bloc/splash_cubit.dart';
-import 'package:tec_bloc/presentation/tasks/home/pages/home.dart';
+import 'package:tec_bloc/presentation/tasks/main/MainPage.dart';
 
 
 class Splash extends StatelessWidget {
@@ -19,7 +19,7 @@ class Splash extends StatelessWidget {
         AppNavigator.pushReplacement(context, const LoginPage());
        }
        if (state is Authenticated) {
-        AppNavigator.pushReplacement(context, const Home());
+        AppNavigator.pushReplacement(context, const MainScreen());
        }
       },
       child: Scaffold(

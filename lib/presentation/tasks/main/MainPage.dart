@@ -1,78 +1,76 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:tec_bloc/common/helper/navigator/app_navigator.dart';
-// import 'package:tec_bloc/core/constants/app_colors.dart';
-// import 'package:tec_bloc/domain/auth/usecases/logout_usecase.dart';
-// import 'package:tec_bloc/domain/tasks/usecases/create_task_usecase.dart';
-// import 'package:tec_bloc/domain/tasks/usecases/get_completed_tasks_usecase.dart';
-// import 'package:tec_bloc/domain/tasks/usecases/get_tasks_usecase.dart';
-// import 'package:tec_bloc/presentation/profil/bloc/user_cubit.dart';
-// import 'package:tec_bloc/presentation/profil/cubit/logout_cubit.dart';
-// import 'package:tec_bloc/presentation/tasks/crreate_tasks/bloc/add_task_cubit.dart';
-// import 'package:tec_bloc/presentation/tasks/home/bloc/task_cubit.dart';
-// import 'package:tec_bloc/presentation/tasks/home/pages/home.dart';
-// import 'package:tec_bloc/service_locator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:tec_bloc/presentation/profil/bloc/user_cubit.dart';
+import 'package:tec_bloc/presentation/profil/pages/profil.dart';
+import 'package:tec_bloc/presentation/tasks/blocs/complete_tasks_cubit.dart/complete_tasks_cubit.dart';
+import 'package:tec_bloc/presentation/tasks/blocs/task_from_file_cubit/task_from_file_cubit.dart';
+import 'package:tec_bloc/presentation/tasks/home/bloc/task_cubit.dart';
+import 'package:tec_bloc/presentation/tasks/home/pages/completed_task_page.dart';
+import 'package:tec_bloc/presentation/tasks/home/pages/home.dart';
+import 'package:tec_bloc/presentation/tasks/home/pages/task_page.dart';
+import 'package:tec_bloc/presentation/tasks/main/components/appBottomNav.dart';
 
-// import '../../profil/pages/profil.dart';
-// import '../crreate_tasks/pages/create_task.dart';
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
-// class Mainpage extends StatefulWidget {
-//   const Mainpage({super.key});
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
 
-//   @override
-//   State<Mainpage> createState() => _MainpageState();
-// }
+class _MainScreenState extends State<MainScreen> {
 
-// class _MainpageState extends State<Mainpage> {
- 
-  
 
-  
+  final List<Widget> _pages = const [
+    Home(),
+    TaskPage(),
+    CompletedTaskPage(),
+    Profil()
+  ];
+  int _currentIndex = 0;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: () => FocusScope.of(context).unfocus(),
-//       child: Scaffold(
-//         resizeToAvoidBottomInset: false,
-//         body: IndexedStack(
-//           index: currentIndex,
-//           children: pages,
-//         ),
-//         floatingActionButton: FloatingActionButton(
-//           onPressed: () {
-//             AppNavigator.push(
-//               context,
-//               BlocProvider(
-//                 create: (context) => AddTaskCubit(sl<CreateTaskUsecase>()),
-//                 child: const AddTask(),
-//               ),
-//             );
-//           },
-//           elevation: 4.0,
-//           shape: CircleBorder(),
-//           child: Icon(Icons.add, color: AppColors.kWhiteColor),
-//         ),
-//         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-//         bottomNavigationBar: BottomNavigationBar(
-//           backgroundColor: Colors.white,
-//           currentIndex: currentIndex,
-//           onTap: _onItemTapped,
-//           items: const [
-//             BottomNavigationBarItem(
-//               icon: Icon(Icons.home, size: 30),
-//               label: 'Главная',
-//             ),
-//             BottomNavigationBarItem(
-//               icon: Icon(Icons.person, size: 30),
-//               label: 'Профиль',
-//             ),
-//           ],
-//           selectedItemColor: Theme.of(context).colorScheme.primary,
-//           unselectedItemColor: Colors.grey,
-//           showUnselectedLabels: true,
-//         ),
-//       ),
-//     );
-//   }
-// }
+  void _onTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+    
+    switch (index) {
+      case 0:
+        context.read<TaskCubit>().displayTask();
+        break;
+      case 1:
+        context.read<TaskFromFileCubit>().getFileTasks();
+        break;
+      case 2:
+        context.read<CompleteTasksCubit>().getCompletedTasks();
+        break;
+      case 3:
+        context.read<UserCubit>().fetchUser();
+        break;
+    }
+  }
+
+  Future<void> checkLocationPermission() async {
+    var status = await Permission.location.status;
+    if (status.isDenied) {
+      status = await Permission.location.request();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkLocationPermission();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: appBottomNav(_currentIndex, _onTap),
+    );
+  }
+}

@@ -18,3 +18,15 @@ class TaskLoaded extends TaskState {
 
 class LoadTasksFailure extends TaskState{}
 
+
+class PendingTasksLoading extends TaskState {}
+
+class PendingTasksLoaded extends TaskState {
+  final List<TaskEntity> tasks;
+  const PendingTasksLoaded(this.tasks);
+}
+
+class PendingTasksFailure extends TaskState {
+  final String? error;
+  const PendingTasksFailure(this.error);
+}

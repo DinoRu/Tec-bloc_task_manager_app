@@ -126,9 +126,10 @@ class _CreateTaskState extends State<CreateTask> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: AppColors.kPrimaryColor,
+          foregroundColor: AppColors.kWhiteColor,
           centerTitle: true,
-          title: buildText("Добавить задач", AppColors.primary, textXExtraLarge,
-              FontWeight.w400, TextAlign.center, TextOverflow.clip),
+          title: Text("Добавить задач"),
         ),
         body: MultiBlocListener(
           listeners: [
@@ -136,7 +137,7 @@ class _CreateTaskState extends State<CreateTask> {
               listener: (context, state) {
                 if (state is AddTaskSuccess) {
                   showSnackBar(context, "Задание выполнено успешно!");
-                  AppNavigator.pushReplacement(context, const Home());
+                  Navigator.pop(context);
                   context.read<TaskCubit>().displayTask();
                 } else if (state is AddTaskFailure) {
                   showSnackBar(context, "Задание не успешно выполнено!");
@@ -356,7 +357,7 @@ class _CreateTaskState extends State<CreateTask> {
                     ] else ...[
                       BlocBuilder<TakePhotoCubit, List<File>>(
                         builder: (context, photos) {
-                          bool isButtonEnabled = photos.length == 2 && !_isUploading;
+                          bool isButtonEnabled = photos.length >= 2 && photos.length <=5  && !_isUploading;
                           return ElevatedButton(
                             onPressed: isButtonEnabled
                                 ? () => createOrUpdateTask(photos)

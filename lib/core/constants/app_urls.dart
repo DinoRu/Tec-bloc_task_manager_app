@@ -8,6 +8,7 @@ class AppUrls {
   static const login = "${baseUrl}auth/login";
   static const createTask = "${baseUrl}task/";
   static const allTask = "${baseUrl}task/";
+  static const completedTasks = "${baseUrl}task/completed";
   static String me = "${baseUrl}auth/me";
   
   // TASKS

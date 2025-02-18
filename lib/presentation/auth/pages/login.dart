@@ -5,9 +5,9 @@ import 'package:tec_bloc/core/constants/app_colors.dart';
 import 'package:tec_bloc/core/constants/app_text.dart';
 import 'package:tec_bloc/data/auth/models/user_login_req.dart';
 import 'package:tec_bloc/domain/auth/usecases/login.dart';
+import 'package:tec_bloc/presentation/tasks/main/MainPage.dart';
 import 'package:tec_bloc/service_locator.dart';
 
-import '../../tasks/home/pages/home.dart';
 import '../widgets/my_textformfield.dart';
 
 
@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
         (token) {
           setState(() {
             isLoading = false;
-            AppNavigator.pushReplacement(context, const Home());
+            AppNavigator.pushReplacement(context, const MainScreen());
           });
         });
     }

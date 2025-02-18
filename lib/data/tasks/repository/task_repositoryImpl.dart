@@ -16,13 +16,18 @@ class TaskRepositoryimpl implements TaskRepository {
   }
 
   @override
-  Future<Either> updateTask(UpdateTaskParams params, int taskId) async {
+  Future<Either> updateTask(UpdateTaskData params, int taskId) async {
     return await sl<TaskRemoteService>().updateTask(params, taskId);
   }
 
   @override
   Future<Either> createTask(CreateTaskParams params) async {
     return await sl<TaskRemoteService>().createTask(params);
+  }
+  
+  @override
+  Future<Either> getCompletedTasks() async {
+    return await sl<TaskRemoteService>().getCompletedTasks();
   }
 
 }

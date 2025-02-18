@@ -41,65 +41,65 @@ class _UserInfoState extends State<UserInfo> {
   @override
   Widget build(BuildContext context) {
     return Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          child: Column(
-            children: [
-          Row(
-            children: [
-              Image.asset(
-                "assets/icons/user.png",
-                width: 50,
-                height: 50,
-              ),
-              const SizedBox(width: 15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildText(
-                    widget.user.fullName, 
-                    AppColors.kBlackColor, 
-                    textExtraLarge, 
-                    FontWeight.w500, 
-                    TextAlign.center, 
-                    TextOverflow.clip
-                  ),
-                  buildText(
-                    widget.user.role == "user" ? "Пользователь" : "Администратор",
-                    AppColors.kBlackColor,
-                    textSmall, 
-                    FontWeight.normal, 
-                    TextAlign.center, 
-                    TextOverflow.clip
-                  )
-                ],
-              )
-            ],
-          ),
-          const SizedBox(height: 10),
-          const Divider(indent: 30, endIndent: 30, color: AppColors.kPrimaryColor),
-          Spacer(),
-          profilItem(
-            icon: Icons.menu_book, 
-            text: "Инструкция", 
-            color: AppColors.kPrimaryColor,
-            onTap: () {
-              AppNavigator.push(context, const InstructionPage());
-            },
-          ),
-          profilItem(
-            icon: Icons.settings, 
-            text: "Настройки", 
-            color: AppColors.kPrimaryColor,
-            onTap: () {},
-          ),
-          const SizedBox(height: 10),
-          profilItem(
-            icon: Icons.logout, 
-            text: "Выход из систем", 
-            color: AppColors.kRed,
-            onTap: _logout
-          ),
-          const SizedBox(height: 30),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Image.asset(
+                  "assets/icons/user.png",
+                  width: 50,
+                  height: 50,
+                ),
+                const SizedBox(width: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildText(
+                      widget.user.fullName, 
+                      AppColors.kBlackColor, 
+                      textExtraLarge, 
+                      FontWeight.w500, 
+                      TextAlign.center, 
+                      TextOverflow.clip
+                    ),
+                    buildText(
+                      widget.user.role == "user" ? "Пользователь" : "Администратор",
+                      AppColors.kBlackColor,
+                      textSmall, 
+                      FontWeight.normal, 
+                      TextAlign.center, 
+                      TextOverflow.clip
+                    )
+                  ],
+                )
+              ],
+            ),
+            const SizedBox(height: 10),
+            Spacer(),
+            profilItem(
+              icon: Icons.menu_book, 
+              text: "Инструкция", 
+              color: AppColors.kPrimaryColor,
+              onTap: () {
+                AppNavigator.push(context, const InstructionPage());
+              },
+            ),
+            profilItem(
+              icon: Icons.settings, 
+              text: "Настройки", 
+              color: AppColors.kPrimaryColor,
+              onTap: () {},
+            ),
+            const SizedBox(height: 10),
+            profilItem(
+              icon: Icons.logout, 
+              text: "Выход из систем", 
+              color: AppColors.kRed,
+              onTap: _logout
+            ),
+            const SizedBox(height: 30),
         ],
       ),
     );
